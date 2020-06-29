@@ -9,17 +9,21 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AppController = void 0;
-const common_1 = require("@nestjs/common");
-const database_service_1 = require("./database/database.service");
-let AppController = class AppController {
-    constructor(DatabaseService) {
-        this.DatabaseService = DatabaseService;
-    }
-};
-AppController = __decorate([
-    common_1.Controller(),
-    __metadata("design:paramtypes", [database_service_1.DatabaseService])
-], AppController);
-exports.AppController = AppController;
-//# sourceMappingURL=app.controller.js.map
+exports.Check = void 0;
+const swagger_1 = require("@nestjs/swagger");
+class Check {
+}
+__decorate([
+    swagger_1.ApiProperty(),
+    __metadata("design:type", String)
+], Check.prototype, "msisdn", void 0);
+__decorate([
+    swagger_1.ApiPropertyOptional(),
+    __metadata("design:type", Boolean)
+], Check.prototype, "status", void 0);
+__decorate([
+    swagger_1.ApiPropertyOptional(),
+    __metadata("design:type", Number)
+], Check.prototype, "account", void 0);
+exports.Check = Check;
+//# sourceMappingURL=check.interface.js.map

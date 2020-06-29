@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.DatabaseService = void 0;
 const oracledb_1 = __importDefault(require("oracledb"));
 const common_1 = require("@nestjs/common");
+const constants_1 = require("./constants");
 let DatabaseService = class DatabaseService {
     constructor() {
         this.connection = null;
@@ -22,16 +23,16 @@ let DatabaseService = class DatabaseService {
     async onApplicationBootstrap() {
         try {
             this.connection = await oracledb_1.default.getConnection({
-                user: "YOTA_TEST",
-                password: "YOTA_TEST",
-                connectString: "10.67.192.12:1521/porridge"
+                user: constants_1.appConstants.db_user,
+                password: constants_1.appConstants.db_password,
+                connectString: constants_1.appConstants.db_host + ":" + constants_1.appConstants.db_port + "/" + constants_1.appConstants.db_service
             });
         }
         catch (error) {
             console.log(error);
         }
     }
-    async onApplicationShutdown(signal) {
+    async onApplicationShutdown() {
         if (this.connection) {
             try {
                 await this.connection.close();

@@ -1,5 +1,6 @@
 import OracleDB from 'oracledb';
 import { Injectable } from '@nestjs/common';
+import { appConstants } from './constants';
 
 @Injectable()
 export class DatabaseService {
@@ -15,9 +16,9 @@ export class DatabaseService {
   async onApplicationBootstrap() {
     try {
       this.connection = await OracleDB.getConnection( {
-        user: "YOTA_TEST",
-        password: "YOTA_TEST",
-        connectString: "10.67.192.12:1521/porridge"
+        user: appConstants.db_user,
+        password: appConstants.db_password,
+        connectString: appConstants.db_host + ":" + appConstants.db_port + "/" + appConstants.db_service
       });
     } catch (error) {
       console.log(error);

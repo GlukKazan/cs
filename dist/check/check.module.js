@@ -5,21 +5,19 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AppController = void 0;
+exports.CheckModule = void 0;
 const common_1 = require("@nestjs/common");
-const database_service_1 = require("./database/database.service");
-let AppController = class AppController {
-    constructor(DatabaseService) {
-        this.DatabaseService = DatabaseService;
-    }
+const check_service_1 = require("./check.service");
+const check_controller_1 = require("./check.controller");
+const database_service_1 = require("../database/database.service");
+let CheckModule = class CheckModule {
 };
-AppController = __decorate([
-    common_1.Controller(),
-    __metadata("design:paramtypes", [database_service_1.DatabaseService])
-], AppController);
-exports.AppController = AppController;
-//# sourceMappingURL=app.controller.js.map
+CheckModule = __decorate([
+    common_1.Module({
+        providers: [check_service_1.CheckService, database_service_1.DatabaseService],
+        controllers: [check_controller_1.CheckController]
+    })
+], CheckModule);
+exports.CheckModule = CheckModule;
+//# sourceMappingURL=check.module.js.map
