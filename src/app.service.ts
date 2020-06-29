@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import OracleDB = require('oracledb');
+import OracleDB from 'oracledb';
 
 @Injectable()
 export class AppService {
@@ -14,9 +14,9 @@ export class AppService {
     let result;
     try {
       connection = await OracleDB.getConnection( {
-        user          : "billing",
-        password      : "billing",
-        connectString : "WHISKEY"
+        user          : "YOTA_TEST",
+        password      : "YOTA_TEST",
+        connectString : "PORRIDGE"
       });
       result = await connection.execute(
         `SELECT :id + 1 as result from dual`,
@@ -32,7 +32,7 @@ export class AppService {
         } catch (err) {
           console.error(err);
         }
-      }      
+      }
     }
     return result.rows[0][0];
   }

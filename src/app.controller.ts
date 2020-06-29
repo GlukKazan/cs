@@ -1,12 +1,15 @@
 import { Controller, Get } from '@nestjs/common';
-import { AppService } from './app.service';
+import { DatabaseService } from './database/database.service';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(private readonly DatabaseService: DatabaseService) {}
 
   @Get()
-  async getHello(): Promise<string> {
-    return await this.appService.getHello();
+  async getHello() {
+    return await this.DatabaseService.getByQuery<string>(
+      `SELECT :id + 1 as result from dual`,
+      [41],
+    );
   }
 }
