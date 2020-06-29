@@ -1,25 +1,14 @@
 import { Injectable, InternalServerErrorException, HttpStatus } from '@nestjs/common';
 import { Check } from 'src/interfaces/check.interface';
-import OracleDB = require('oracledb');
+import { DatabaseService } from '../database/database.service';
 import { appConstants } from './constants';
 
 @Injectable()
 export class CheckService {
+    constructor(private readonly database: DatabaseService) {}
 
-    async getConnection(): Promise<OracleDB.Connection> {
-        return await OracleDB.getConnection( {
-            user          : appConstants.db_user,
-            password      : appConstants.db_password,
-            connectString : appConstants.db_host + ":" + appConstants.db_port + "/" + appConstants.db_service
-        });
-    }
-
-    async freeConnection(connection: OracleDB.Connection) {
-        await connection.close();
-    }
-
-    async getAccount(connection: OracleDB.Connection, msisdn: string): Promise<number> {
-        const result = await connection.execute(
+    async getAccount(msisdn: string): Promise<number> {
+        const result = await this.database.getByQuery(
             `select ID from CUSTOMER where MSISDN = :msisdn`, [msisdn]
         );
         if (!result.rows || result.rows.length == 0) {
@@ -28,8 +17,8 @@ export class CheckService {
         return result.rows[0][0];
     }
 
-    async getStatus(connection: OracleDB.Connection, account: number): Promise<number> {
-        const result = await connection.execute(
+    async getStatus(account: number): Promise<number> {
+        const result = await this.database.getByQuery(
             `select STATUS from CUSTOMER where ID = :id`, [account]
         );
         if (!result.rows || result.rows.length == 0) {
@@ -39,13 +28,11 @@ export class CheckService {
     }
 
     async check(x: Check): Promise<Check> {
-        let connection: OracleDB.Connection;
         try {
-            connection = await this.getConnection();
             x.status = false;
-            x.account = await this.getAccount(connection, x.msisdn);
+            x.account = await this.getAccount(x.msisdn);
             if (x.account) {
-                const status = await this.getStatus(connection, x.account);
+                const status = await this.getStatus(x.account);
                 if (status == appConstants.customer_active) {
                     x.status = true;
                 }
@@ -59,10 +46,6 @@ export class CheckService {
                 status: HttpStatus.BAD_REQUEST,
                 error: error
             });
-        } finally {
-            if (connection) {
-                await this.freeConnection(connection);
-            }
-        }
+        }  
     }
 }
